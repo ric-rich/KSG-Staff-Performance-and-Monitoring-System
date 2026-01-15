@@ -1,0 +1,5 @@
+ALTER TABLE repository_files 
+ADD COLUMN task_id INT DEFAULT NULL,
+ADD COLUMN user_id INT DEFAULT NULL,
+ADD CONSTRAINT fk_repo_task FOREIGN KEY (task_id) REFERENCES user_tasks(task_id) ON DELETE SET NULL,
+ADD CONSTRAINT fk_repo_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL;

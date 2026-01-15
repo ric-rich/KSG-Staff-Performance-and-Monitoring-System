@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Set the base URL for all relative paths -->
+    <base href="/PROJECTS/well/FINAL/" />
+    <title>User Dashboard - Staff Performance System</title> 
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- External Styles -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="min-h-screen bg-gray-100 :bg-gray-900">
+      <nav class="bg-white :bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex items-center">
+              <button
+                data-action="toggleUserMenu"
+                class="lg:hidden mr-3 p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
+              <div class="w-8 h-8 bg-green-600 rounded-lg mr-3"></div>
+              <h1 class="text-xl font-bold text-gray-800 :text-white">User Dashboard</h1>
+              <span
+                id="userWelcome"
+                class="ml-4 text-gray-600 :text-gray-300 hidden sm:block"
+              ></span>
+            </div>
+            <div class="flex items-center space-x-4">
+              <button
+                data-action="toggleUserMenu"
+                class="hidden lg:flex items-center text-gray-600 :text-gray-300 hover:text-gray-800 :hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+                Menu
+              </button>
+              <button
+                data-action="logout" 
+                class="flex items-center text-gray-600 :text-gray-300 hover:text-gray-800 :hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  ></path>
+                </svg>
+                <span class="hidden sm:block">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- User Sidebar Menu -->
+      <div
+        id="userSidebar"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-white :bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out"
+      >
+        <div
+          class="flex items-center justify-between h-16 px-6 border-b border-gray-200 :border-gray-700"
+        >
+          <h2 class="text-lg font-semibold text-gray-800 :text-white">Navigation</h2>
+          <button
+            data-action="toggleUserMenu"
+            class="p-2 rounded-md text-gray-600 :text-gray-300 hover:text-gray-800 :hover:text-white hover:bg-gray-100 :hover:bg-gray-700 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <nav class="mt-6">
+          <div class="px-3 space-y-1">
+            <button
+              onclick="showUserSection('dashboard')"
+              class="user-nav-item w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 :text-gray-300 rounded-md hover:bg-green-50 :hover:bg-gray-700 hover:text-green-700 :hover:text-green-400 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 5a2 2 0 012-2h2a2 2 0 012 2v6H8V5z"
+                ></path>
+              </svg>
+              Dashboard
+            </button>
+            <button
+              onclick="showUserSection('profile')"
+              class="user-nav-item w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 :text-gray-300 rounded-md hover:bg-green-50 :hover:bg-gray-700 hover:text-green-700 :hover:text-green-400 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                ></path>
+              </svg>
+              My Profile
+            </button>
+            <button
+              onclick="showUserSection('tasks')"
+              class="user-nav-item w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 :text-gray-300 rounded-md hover:bg-green-50 :hover:bg-gray-700 hover:text-green-700 :hover:text-green-400 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                ></path>
+              </svg>
+              My Tasks
+            </button>
+            <button
+              onclick="showUserSection('reports')"
+              class="user-nav-item w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 :text-gray-300 rounded-md hover:bg-green-50 :hover:bg-gray-700 hover:text-green-700 :hover:text-green-400 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                ></path>
+              </svg>
+              Reports
+            </button>
+            <button
+              onclick="showUserSection('settings')"
+              class="user-nav-item w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 :text-gray-300 rounded-md hover:bg-green-50 :hover:bg-gray-700 hover:text-green-700 :hover:text-green-400 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+              </svg>
+              Settings
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      <!-- User Sidebar Overlay -->
+      <div
+        id="userSidebarOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"
+        data-action="toggleUserMenu"
+      ></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- User Content Area -->
+        <div id="userContentArea" class="mt-8 ">
+          <!-- Dashboard Home -->
+          <div id="dashboardHome" class="bg-white :bg-gray-800 rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 :text-white mb-4">
+              Welcome to Your Dashboard
+            </h2>
+            <p class="text-gray-600 :text-gray-300 mb-4">
+              This is your personal workspace where you can manage your tasks,
+              view reports, and update your profile.
+            </p>
+            <div class="bg-green-50 :bg-green-900/50 border border-green-200 :border-green-800 rounded-lg p-4">
+              <p class="text-green-800">
+                <strong>Account Status:</strong> Active user account with
+                standard permissions.
+              </p>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 my-4">Task Status Overview</h3>
+            <div class="max-w-sm mx-auto">
+                <canvas id="taskStatusChart"></canvas>
+            </div>
+          </div>
+          <!-- Profile Management Section -->
+          <div id="profileManagement" class="hidden">
+            <!-- Content will be loaded by app.js -->
+          </div>
+
+          <!-- User Reports Section -->
+          <div id="userReports" class="hidden">
+            <!-- Content will be loaded by app.js -->
+          </div>
+
+          <!-- User Settings Section -->
+          <div id="userSettings" class="hidden">
+            <!-- Content will be loaded by app.js -->
+          </div>
+
+          <!-- Task Management Section -->
+          <div id="taskManagement" class="hidden">
+            <!-- Content will be loaded by app.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic Modals for UI Feedback -->
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-40">
+        <div class="bg-white :bg-gray-800 rounded-lg p-6 flex items-center space-x-4">
+            <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span id="loadingModalMessage" class="text-gray-700">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="hidden fixed top-5 right-5 z-[70] p-4 rounded-lg shadow-lg text-white fade-in" role="alert">
+        <span id="messageModalText"></span>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-40 p-4">
+        <div class="bg-white :bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold text-gray-800 :text-white mb-4" id="confirmModalTitle">Are you sure?</h3>
+            <p class="text-gray-600 :text-gray-300 mb-6" id="confirmModalMessage">This action cannot be undone.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="confirmModalCancel" class="px-6 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition-colors">
+                    Cancel
+                </button>
+                <button id="confirmModalConfirm" class="px-6 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Details Modal Container -->
+    <div id="taskDetailsModalContainer"></div>
+
+    <!-- Create New Task Modal -->
+    <div id="createTaskModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg">
+            <div class="flex justify-between items-start mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Create New Task</h2>
+                <button onclick="closeCreateTaskModal()" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            </div>
+            <form id="createTaskForm" onsubmit="event.preventDefault(); submitNewTask();" class="space-y-4">
+                <div>
+                    <label for="newTaskTitle" class="block text-sm font-medium text-gray-700">Task Title</label>
+                    <input type="text" id="newTaskTitle" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                </div>
+                <div>
+                    <label for="newTaskDescription" class="block text-sm font-medium text-gray-700">Description (Optional)</label>
+                    <textarea id="newTaskDescription" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="newTaskDueDate" class="block text-sm font-medium text-gray-700">Due Date</label>
+                        <input type="date" id="newTaskDueDate" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="newTaskPriority" class="block text-sm font-medium text-gray-700">Priority</label>
+                        <select id="newTaskPriority" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="border-t pt-4 mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="closeCreateTaskModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">Cancel</button>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load session and app scripts -->
+    <script src="js/session.js" defer></script>
+    <script src="app.js" defer></script>
+</body>
+</html>

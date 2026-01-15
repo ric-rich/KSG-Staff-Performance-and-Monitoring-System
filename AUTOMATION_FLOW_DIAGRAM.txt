@@ -1,0 +1,251 @@
+================================================================================
+  ADMIN DASHBOARD AUTOMATION - SYSTEM FLOW DIAGRAM
+================================================================================
+
+OVERVIEW
+--------
+This diagram shows how the automated dashboard statistics work.
+
+
+AUTOMATION FLOW
+---------------
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                        ADMIN DASHBOARD                              │
+│                     (Browser - Frontend)                            │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 1. Admin logs in
+                                 ▼
+┌───────────────────────────���─────────────────────────────────────────┐
+│                    INITIAL LOAD (app.js)                            │
+│  • loadAdminDashboardData()                                         │
+│  • updateAdminDashboardStats()                                      │
+│  • fetchRecentAdminActivity()                                       │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 2. API Call (AJAX)
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│              API ENDPOINT (api/admin.php)                           │
+│  GET: api/admin.php?action=get_dashboard_stats                      │
+│  • Validates admin session                                          │
+│  • Calls Admin class methods                                        │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 3. Database Queries
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                   ADMIN CLASS (classes/Admin.php)                   │
+│                                                                     │
+│  getDashboardStats()                                                │
+│  ├─► Total Users (users table)                                      │
+│  ├─► Active Sessions (access_logs table)                            │
+│  ├─► System Health (multiple checks)                                │
+│  └─► Alerts (user_tasks, access_logs)                               ��
+│                                                                     │
+│  getTaskStatistics()                                                │
+│  └─► Task counts by status                                          │
+│                                                                     │
+│  getRecentActivity()                                                │
+│  └─► Last 10 activities                                             │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 4. Query Results
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      DATABASE (MySQL)                               │
+│                                                                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
+│  │    users     │  │ access_logs  │  │ user_tasks   │             │
+│  │              │  │              │  │              │             │
+│  │ • user_id    │  │ • log_id     │  │ • task_id    │             │
+│  │ • email      │  │ • user_id    │  │ • status     │             │
+│  │ • created_at │  │ • action     │  │ • due_date   │             │
+│  └──────────────┘  │ • created_at │  └──────────────┘             │
+│                    └──────────────┘                                │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 5. JSON Response
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      API RESPONSE                                   │
+│  {                                                                  │
+│    "status": "success",                                             │
+│    "stats": {                                                       │
+│      "total_users": 25,                                             │
+│      "active_sessions": 5,                                          │
+│      "system_health": {...},                                        │
+│      "alerts": [...]                                                │
+│    },                                                               │
+│    "recent_activity": [...]                                         │
+│  }                                                                  │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 6. Update DOM
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                   DASHBOARD DISPLAY                                 │
+│                                                                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
+│  │ Total Users  │  │   Active     │  │   System     │             │
+│  │     25       │  │  Sessions    │  │   Health     │             │
+│  │              │  │      5       │  │   Healthy    │             │
+│  └──────────────┘  └──────────────┘  └──────────────┘             │
+│                                                                     │
+│  ┌────────────────────────────────────────────────┐                │
+│  │ Alerts (3)                                     │                │
+│  │ • 5 overdue tasks require attention            │                │
+│  │ • 10 failed login attempts                     │                │
+│  │ • 3 users have no assigned tasks               │                │
+│  └────────────────────────────────────────────────┘                │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 7. Wait 30 seconds
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    AUTO-REFRESH TIMER                               │
+│  setInterval(() => {                                                │
+│    updateAdminDashboardStats();                                     │
+│  }, 30000);                                                         │
+└─────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 8. Repeat from step 2
+                                 └─────────────────────┐
+                                                       │
+                                                       ▼
+                                              (Back to API Call)
+
+
+DATA FLOW DETAILS
+-----------------
+
+TOTAL USERS:
+  Database Query → Count users table → Display count
+  
+ACTIVE SESSIONS:
+  Database Query → Count recent logins (30 min) → Display count
+  
+SYSTEM HEALTH:
+  Multiple Checks → Evaluate status → Display color-coded badge
+  • Database connectivity
+  • Error rate (last hour)
+  • Overdue tasks count
+  
+ALERTS:
+  Multiple Queries → Generate alert objects → Display prioritized list
+  • Overdue tasks (High Priority)
+  • Failed logins (Medium Priority)
+  • Tasks due soon (Low Priority)
+  • Users without tasks (Low Priority)
+
+
+TIMING DIAGRAM
+--------------
+
+Time    Event
+-----   -----
+0:00    Admin logs in
+0:01    Initial data load
+0:01    Display statistics
+0:31    Auto-refresh #1
+0:31    Update statistics
+1:01    Auto-refresh #2
+1:01    Update statistics
+...     (continues every 30 seconds)
+
+
+ERROR HANDLING FLOW
+-------------------
+
+┌─────────────┐
+│ API Call    │
+└──────┬──────┘
+       │
+       ├─► Success → Update Display
+       │
+       └─► Error ──┐
+                   │
+                   ├─► Log to console
+                   ├─► Log to error.log
+                   └─► Continue (don't break dashboard)
+
+
+SECURITY FLOW
+-------------
+
+┌─────────────────┐
+│ API Request     │
+└────────┬────────┘
+         │
+         ├─► Check Session
+         │   │
+         │   ├─► Valid → Continue
+         │   │
+         │   └─► Invalid → Return 401 Unauthorized
+         │
+         └─► Validate Admin
+             │
+             ├─► Is Admin → Process Request
+             │
+             └─► Not Admin → Return 403 Forbidden
+
+
+COMPONENT INTERACTION
+---------------------
+
+Frontend (app.js)
+    ↕ AJAX Calls
+Backend (admin.php)
+    ↕ Method Calls
+Admin Class (Admin.php)
+    ↕ SQL Queries
+Database (MySQL)
+
+
+KEY COMPONENTS
+--------------
+
+1. Frontend (JavaScript)
+   • updateAdminDashboardStats()
+   • Auto-refresh timer
+   • DOM manipulation
+
+2. API Layer (PHP)
+   • Session validation
+   • Request routing
+   • Response formatting
+
+3. Business Logic (Admin Class)
+   • Data aggregation
+   • Health checks
+   • Alert generation
+
+4. Data Layer (Database)
+   • User data
+   • Activity logs
+   • Task information
+
+
+PERFORMANCE CONSIDERATIONS
+--------------------------
+
+Request Size: ~5-10 KB
+Response Time: <500ms
+Update Frequency: 30 seconds
+Database Queries: 6-8 per update
+Client Memory: Minimal
+Server Load: Low
+
+
+SCALABILITY
+-----------
+
+Current: Handles 100+ concurrent admins
+Optimized: Can handle 1000+ with caching
+Future: WebSocket for real-time updates
+
+
+================================================================================
+  This diagram shows the complete automation flow from login to display
+================================================================================
