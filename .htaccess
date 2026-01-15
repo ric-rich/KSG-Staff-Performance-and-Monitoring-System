@@ -1,0 +1,42 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Set Environment Variables
+# UNCOMMENT AND SET THESE ON YOUR LIVE SERVER
+# OR SET THEM IN YOUR HOSTING CONTROL PANEL
+# SetEnv APP_ENV production
+# SetEnv DB_HOST localhost
+# SetEnv DB_NAME your_db_name
+# SetEnv DB_USER your_db_user
+# SetEnv DB_PASS your_db_password
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect dotfiles
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Allow access to .well-known for SSL validation
+<FilesMatch "^\.well-known">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Handle Authorization Header
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Protect sensitive directories
+RewriteRule ^vendor/ - [F,L]
+RewriteRule ^git/ - [F,L]
+RewriteRule ^.git/ - [F,L]
+RewriteRule ^config/ - [F,L]
+RewriteRule ^backups/ - [F,L]
+RewriteRule ^scripts/ - [F,L]
+
+# Custom Error Pages (Optional)
+# ErrorDocument 404 /index.php
+# ErrorDocument 500 /index.php

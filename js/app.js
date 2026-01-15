@@ -31,12 +31,17 @@ export const eventBus = {
 function initEventListeners() {
   eventBus.on('session:updated', (sessionState) => {
     if (!sessionState.isLoggedIn) {
-      window.location.href = '/PROJECTS/well/FINAL/index.php';
+      const basePath = window.location.pathname.includes('/PROJECTS/') ? '/PROJECTS/well/FINAL' : '';
+      window.location.href = `${basePath}/index.php`;
     }
   });
 
   eventBus.on('auth:login', async (user) => {
-    const basePath = '/PROJECTS/well/FINAL';
+    // Use current path or config base URL to determine root
+    const basePath = window.location.pathname.includes('/PROJECTS/') 
+      ? '/PROJECTS/well/FINAL' 
+      : ''; // Empty string for root domain deployment
+      
     const redirectPath = user.user_type === 'admin' ? `${basePath}/admin/dashboard.php` : `${basePath}/dashboard.php`;
     window.location.href = redirectPath;
   });
