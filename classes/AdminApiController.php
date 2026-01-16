@@ -1049,7 +1049,7 @@ class AdminApiController
 
     private function getProfile()
     {
-        $stmt = $this->db->prepare('SELECT admin_id, email, first_name, last_name, department, phone, job_title, profile_picture, notification_preferences FROM admins WHERE admin_id = ?');
+        $stmt = $this->db->prepare('SELECT admin_id, email, first_name, last_name, department, phone, job_title, profile_picture, notification_preferences, settings, created_at FROM admins WHERE admin_id = ?');
         $stmt->execute([$this->adminId]);
         $profile = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($profile) {
@@ -1060,13 +1060,16 @@ class AdminApiController
             }
             $profile['name'] = trim($profile['first_name'] . ' ' . $profile['last_name']);
 
-            $prefs = $profile['notification_preferences'] ? json_decode($profile['notification_preferences'], true) : ['receive_task_emails' => false];
-            $profile['settings'] = json_encode(['notifications' => $prefs]);
+            // Parse notification preferences
+            $profile['notification_preferences'] = $profile['notification_preferences'] ? json_decode($profile['notification_preferences'], true) : ['receive_task_emails' => false];
+            
+            // Parse settings
+            $profile['settings'] = $profile['settings'] ? json_decode($profile['settings'], true) : ['theme' => 'light', 'language' => 'en'];
 
             echo json_encode(['status' => 'success', 'data' => $profile]);
         } else {
             http_response_code(404);
-            echo json_encode(['status' => 'error']);
+            echo json_encode(['status' => 'error', 'message' => 'Profile not found']);
         }
     }
 
