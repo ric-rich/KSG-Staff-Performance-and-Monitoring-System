@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+$base_url = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/';
+if ($base_url === '//') $base_url = '/';
+?>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Set the base URL for all relative paths -->
-  <base href="/PROJECTS/well/FINAL/" />
+  <base href="<?php echo $base_url; ?>" />
   <title>User Dashboard - Staff Performance System</title>
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>

@@ -9,8 +9,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Define application paths. Adjust these if your file structure changes.
-    const basePath = '/PROJECTS/well/FINAL';
+    // Define application paths dynamically based on current location
+    const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || window.location.origin;
     const loginPagePath = `${basePath}/index.php`;
     const userDashboardPath = `${basePath}/dashboard.php`;
     const adminDashboardPath = `${basePath}/admin/dashboard.php`;

@@ -34,13 +34,15 @@ class SessionState {
       // Clear client-side session
       this.clearSession();
 
-      // Force reload to clear any cached state - use absolute path
-      window.location.href = '/PROJECTS/well/FINAL/index.php';
+      // Force reload to clear any cached state - use dynamic base path
+      const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+      window.location.href = `${basePath}/index.php`;
     } catch (error) {
       console.error('Logout error:', error);
       // Force logout anyway
       this.clearSession();
-      window.location.href = '/PROJECTS/well/FINAL/index.php';
+      const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+      window.location.href = `${basePath}/index.php`;
     }
   }
 

@@ -8,7 +8,11 @@ require_once __DIR__ . '/inc/maintenance_check.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Set the base URL for all relative paths -->
-  <base href="/PROJECTS/well/FINAL/" />
+  <?php
+    $base_url = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/';
+    if ($base_url === '//') $base_url = '/';
+  ?>
+  <base href="<?php echo $base_url; ?>" />
   <title>Staff Performance Monitoring and Evaluation System</title>
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>

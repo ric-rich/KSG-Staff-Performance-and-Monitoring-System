@@ -16,11 +16,13 @@ export const auth = {
         await apiCall('api/auth.php?action=logout', 'POST');
         // Clear client-side session
         this.clearSession();
-        // Redirect to login page with absolute path
-        window.location.href = '/PROJECTS/well/FINAL/index.php';
+        // Redirect to login page with dynamic base path
+        const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+        window.location.href = `${basePath}/index.php`;
     } catch (error) {
         console.error('Logout error:', error);
-        window.location.href = '/PROJECTS/well/FINAL/index.php';
+        const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+        window.location.href = `${basePath}/index.php`;
     }
   },
 

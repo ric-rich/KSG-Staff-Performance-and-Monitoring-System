@@ -410,9 +410,8 @@ async function userLogin() {
         if (result.status === 'success') {
             // On successful login from the main page, redirect to the user dashboard.
             // The dashboard page will handle loading the user data.
-            // On successful login from the main page, redirect to the user dashboard.
-            // The dashboard page will handle loading the user data.
-            window.location.href = '/PROJECTS/well/FINAL/dashboard.php';
+            const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+            window.location.href = `${basePath}/dashboard.php`;
         } else {
             hideLoadingModal();
             showErrorMessage(result.message || 'Invalid email or password');
@@ -494,9 +493,8 @@ async function adminLogin() {
         if (result.status === 'success') {
             // On successful admin login, redirect to the admin dashboard.
             // The dashboard page will handle loading the admin data.
-            // On successful admin login, redirect to the admin dashboard.
-            // The dashboard page will handle loading the admin data.
-            window.location.href = '/PROJECTS/well/FINAL/admin/dashboard.php';
+            const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+            window.location.href = `${basePath}/admin/dashboard.php`;
         } else {
             showErrorMessage(result.message || 'Invalid credentials or index code');
         }
@@ -561,9 +559,9 @@ async function logout() {
         sessionStorage.clear();
 
         // After attempting server logout and clearing storage, redirect to the main page.
-        // Use absolute path to ensure correct redirect from both user and admin dashboards.
-        // The session.js on that page will confirm the logged-out state.
-        window.location.href = '/PROJECTS/well/FINAL/index.php';
+        // Use dynamic base path to ensure correct redirect from both user and admin dashboards.
+        const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
+        window.location.href = `${basePath}/index.php`;
     }
 }
 

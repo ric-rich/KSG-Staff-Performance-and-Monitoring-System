@@ -31,16 +31,15 @@ export const eventBus = {
 function initEventListeners() {
   eventBus.on('session:updated', (sessionState) => {
     if (!sessionState.isLoggedIn) {
-      const basePath = window.location.pathname.includes('/PROJECTS/') ? '/PROJECTS/well/FINAL' : '';
+      const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') || '';
       window.location.href = `${basePath}/index.php`;
     }
   });
 
   eventBus.on('auth:login', async (user) => {
-    // Use current path or config base URL to determine root
-    const basePath = window.location.pathname.includes('/PROJECTS/') 
-      ? '/PROJECTS/well/FINAL' 
-      : ''; // Empty string for root domain deployment
+    // Use dynamic base path from <base> tag
+    const basePath = document.querySelector('base')?.href?.replace(/\/$/, '') 
+      || ''; // Empty string for root domain deployment
       
     const redirectPath = user.user_type === 'admin' ? `${basePath}/admin/dashboard.php` : `${basePath}/dashboard.php`;
     window.location.href = redirectPath;

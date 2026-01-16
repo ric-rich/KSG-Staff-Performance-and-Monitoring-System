@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../inc/auth.php';
 
 if (!is_admin()) {
-    header('Location: ../INDEX.HTML');
+    header('Location: ../index.php');
     exit;
 }
 ?>

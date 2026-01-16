@@ -9,8 +9,8 @@ session_start();
 // Check if the admin is logged in, otherwise redirect to the login page.
 // This is a crucial security step.
 if (!isset($_SESSION['admin_id'])) {
-    // Using a defined constant for paths makes maintenance easier.
-    header('Location: /PROJECTS/well/FINAL/admin/login.php');
+    // Redirect to admin login page
+    header('Location: ../index.php');
     exit();
 }
 
