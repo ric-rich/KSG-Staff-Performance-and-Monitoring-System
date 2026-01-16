@@ -220,11 +220,11 @@ INSERT INTO security_settings (setting_name, setting_value) VALUES
 
 -- Create default admin account with password: admin123
 INSERT INTO admins (email, password_hash, index_code, first_name, last_name) VALUES
-('admin@ksg.ac.ke', '$2y$10$H.DF1S9M76YQjpkrZmxZL.gKN5M.Jpl5v0XPq3o2JQDFb1JldJB/O', 'Richmond@524', 'System', 'Administrator');
+('admin@ksg.ac.ke', '$2y$10$T0Nk.ZxmPko/CVFL5Mduxe9qxecOv0JLtP7sYxZ/Xh3FVBI97cQ.2', 'Richmond@524', 'System', 'Administrator');
 
 -- Create test user account with password: user123
 INSERT INTO users (email, password_hash, first_name, last_name, department) VALUES
-('john.doe@ksg.ac.ke', '$2y$10$v7wqE6RLxzYHLwJJd/mkCOV0Q.ejFHxKGZgZ1GxZF.wpHqgAFSbVi', 'John', 'Doe', 'Training');
+('john.doe@ksg.ac.ke', '$2y$10$uRffQoNLRzDG1eEesBmvye5fxrpg0vJnqluzAjKeC03NEjDdAwNAm', 'John', 'Doe', 'Training');
 
 -- Create stored procedure for adding a new user
 CREATE PROCEDURE create_user(
