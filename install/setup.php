@@ -14,25 +14,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db_name = $_POST['db_name'] ?? 'ksg_smi_performance';
     $username = $_POST['db_username'] ?? 'root';
     $password = $_POST['db_password'] ?? '';
+    $skip_db_creation = isset($_POST['skip_db_creation']) && $_POST['skip_db_creation'] === '1';
 
     try {
-        // Test database connection
-        $conn = new PDO("mysql:host=$host", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // For shared hosting (cPanel), connect directly to the existing database
+        // For local/VPS, we can create the database
+        if ($skip_db_creation) {
+            // Shared hosting: Connect directly to the pre-created database
+            $conn = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } else {
+            // Local/VPS: Test database connection and create database
+            $conn = new PDO("mysql:host=$host", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Drop existing database if it exists
-        $conn->exec("DROP DATABASE IF EXISTS `$db_name`");
-        
-        // Create fresh database
-        $conn->exec("CREATE DATABASE `$db_name`");
-        $conn->exec("USE `$db_name`");
+            // Drop existing database if it exists
+            $conn->exec("DROP DATABASE IF EXISTS `$db_name`");
+            
+            // Create fresh database
+            $conn->exec("CREATE DATABASE `$db_name`");
+            $conn->exec("USE `$db_name`");
+        }
 
         // Read SQL file
         $sql = file_get_contents('../database/ksg_smi_performance.sql');
-        
-        // Execute create and use database statements first
-        $conn->exec("CREATE DATABASE IF NOT EXISTS `$db_name`");
-        $conn->exec("USE `$db_name`");
         
         // First, execute all table creation and basic statements
         $statements = [];
@@ -205,6 +210,17 @@ if (file_exists('install_complete.txt')) {
                     <label class="block text-sm font-medium text-gray-700">Database Password</label>
                     <input type="password" name="db_password" 
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+                    <label class="flex items-start space-x-2">
+                        <input type="checkbox" name="skip_db_creation" value="1" 
+                               class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-yellow-800">
+                            <strong>cPanel/Shared Hosting:</strong> Check this if your database was already created via cPanel. 
+                            (Database names are usually prefixed, e.g., <code>username_dbname</code>)
+                        </span>
+                    </label>
                 </div>
 
                 <div>
