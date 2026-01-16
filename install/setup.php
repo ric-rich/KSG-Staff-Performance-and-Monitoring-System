@@ -55,6 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 continue;
             }
             
+            // Skip CREATE DATABASE and USE statements for shared hosting
+            if ($skip_db_creation) {
+                if (stripos($line, 'CREATE DATABASE') === 0 || stripos($line, 'USE ') === 0) {
+                    continue;
+                }
+            }
+            
             // Check if this is the start of a stored procedure
             if (stripos($line, 'CREATE PROCEDURE') === 0) {
                 $inProcedure = true;
